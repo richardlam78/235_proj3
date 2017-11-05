@@ -1,17 +1,17 @@
 #include "calculator.h"
 
 #include <cctype>
+#include <string>
 #include <cmath>
 using std::pow;
-using std::substr;
+using std::string;
 using std::isdigit;
 using std::stod;
 using std::istringstream;
 
-
 void Calculator::refineInput(string& input)
 {
-  int i = 0;
+  unsigned int i = 0;
   while(i < input.size()) {
     while (isdigit(input[i]) || input[i] == '.' || input[i] == ' ') {
       ++i;
@@ -25,30 +25,29 @@ void Calculator::refineInput(string& input)
 
 
 
-double Calculator::evaluate(const string& elem1,
+double Calculator::evaluate(const double& x1,
                             const string& op,
-                            const string& elem2)
+                            const double& x2)
 {
   // assume there are only three things that come in
   // first operand, the operator, and the second operand
-  double x1 = stod(elem1);
-  double x2 = stod(elem2);
+  char op_char = op[0];      // WATCH: not sure if this will work
   double result;
 
-  switch (op) {
-    case "+":
+  switch (op_char) {
+    case '+':
       result = x1 + x2;
       break;
-    case "-":
+    case '-':
       result = x1 - x2;
       break;
-    case "*":
+    case '*':
       result = x1 * x2;
       break;
-    case "/":
+    case '/':
       result = x1 / x2;
       break;
-    case "^":
+    case '^':
       result = pow(x1,x2);
       break;
     default:
@@ -60,7 +59,7 @@ double Calculator::evaluate(const string& elem1,
   return result;
 }
 
-double operator()(string& input)
+double Calculator::operator()(string& input)
 {
   double result;
   refineInput(input);
@@ -77,20 +76,24 @@ double operator()(string& input)
   }
 
   // evaluate the innermost () group
-  string x2 = left.top();
+  double x2 = stod(left.top());
   left.pop();
   string op = left.top();
   left.pop();
-  string x1 = left.top();
+  double x1 = stod(left.top());
   left.pop();
   result = evaluate(x1, op, x2);
 
+  // remove the () from left and right
+  left.pop();
+  right.pop();
+
   while (!left.empty() && !right.empty()) {
-    // evaluate expression in parentheses starting
+    // evaluate expression in the next set of parentheses
     while (left.top() != "(" && !left.empty()) {
       op = left.top();
       left.pop();
-      x1 = left.top();
+      x1 = stod(left.top());
       left.pop();
       result = evaluate(x1, op, result);
     }
@@ -98,9 +101,9 @@ double operator()(string& input)
     while (right.top() != ")" && !right.empty()) {
       op = right.top();
       right.pop();
-      x2 = right.top();
+      x2 = stod(right.top());
       right.pop();
-      result = evaluate(right, op, x2);
+      result = evaluate(result, op, x2);
     }
 
     // remove the () to work on values in the next () group

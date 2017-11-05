@@ -3,14 +3,16 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-using std::string;
-using std:ifstream;
-using std::cout;
+#include <iomanip>
 using std::setprecision;
+using std::string;
+using std::ifstream;
+using std::cout;
+using std::cin;
 using std::cerr;
 using std::endl;
 
-int main(unsigned int argc, const char* argv[])
+int main(int argc, const char* argv[])
 {
   Calculator myCalc;
   string input;
@@ -41,8 +43,8 @@ int main(unsigned int argc, const char* argv[])
     cin >> input;
 
     // give input line to calculator class
-    result = myCalc(line);
-    cout << result << " = " << line
+    result = myCalc(input);
+    cout << result << " = " << input
          << endl;
   }
 

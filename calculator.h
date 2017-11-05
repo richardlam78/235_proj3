@@ -10,15 +10,14 @@ using std::stack;
 class Calculator
 {
 public:
-  Calculator();
-  Calculator(const string& input) { this.operator(input); }
-  ~Calculator();
+  Calculator() {};
+  ~Calculator() {};
 
   void refineInput(string&);
 
   // takes a string of numbers and operators
   // returns a partial result
-  double evaluate(const string&, const string&, const string&);
+  double evaluate(const double&, const string&, const double&);
 
   // takes string of numbers and operators and splits to left and right stacks
   // returns the final result
@@ -27,4 +26,6 @@ public:
 private:
   stack<string> left;
   stack<string> right;
-}
+};
+
+#endif

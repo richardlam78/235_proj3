@@ -16,4 +16,11 @@ proj3_lam: $(OBJS)
 	$(CC) $(CPPFLAGS) -o proj3_lam $(OBJS)
 
 # cmds to make each object file
-main.o:
+main.o: main.cpp calculator.h
+	$(CC) $(CPPFLAGS) -c main.cpp
+
+calculator.o: calculator.cpp calculator.h
+	$(CC) $(CPPFLAGS) -c calculator.cpp
+
+clean:
+	rm *.o
