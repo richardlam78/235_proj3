@@ -9,10 +9,12 @@ using std::isdigit;
 using std::istringstream;
 using std::ostringstream;
 
-
-#include <iostream>
-using std::cout;
-using std::endl;
+~Calculator::Calculator()
+{
+  stack* stack_to_del = expression;
+  clear();
+  delete stack_to_del;
+}
 
 void Calculator::refineInput(string& line)
 {
@@ -84,7 +86,6 @@ string Calculator::operator()(string& line, unsigned int precision)
   input = line;
   string result;
   refineInput(input);
-  cout << "refined: " << input << endl;
 
   istringstream iss(input);
 
@@ -92,15 +93,14 @@ string Calculator::operator()(string& line, unsigned int precision)
   while (iss >> next_elem) {
     // push everything before a closing () into the stack
     if (next_elem != ")") {
-      cout << "pushed in " << next_elem << " " << endl;;
       expression.push(next_elem);
     }
 
     // works forward on ^, *, and /
+    // (evaluates them first)
     if (expression.top() == "^" || expression.top() == "*" || expression.top() == "/") {
       iss >> next_elem;
       if (next_elem == "(") {
-        cout << "pushed in (" << endl;
         expression.push(next_elem);
         continue;
       } else {
@@ -116,9 +116,6 @@ string Calculator::operator()(string& line, unsigned int precision)
         expression.pop();
 
         result = evaluate(x1, op, x2);
-        cout << "fwd quantity result: "
-             << x1 << op << x2 << "="
-             << result << endl;
         expression.push(result);
         continue;
       }
@@ -126,7 +123,6 @@ string Calculator::operator()(string& line, unsigned int precision)
     // hit a closing ()
     // works backward
     else if (next_elem == ")") {
-      cout << "found a )." << endl;
       do {
         result = expression.top();
         expression.pop();
@@ -136,9 +132,7 @@ string Calculator::operator()(string& line, unsigned int precision)
           // break;
         }
 
-        cout << expression.top() << endl;
         if (expression.top() == "(") {
-          cout << "broke out" << endl;
           expression.pop();
           expression.push(result);
           break;
@@ -153,12 +147,8 @@ string Calculator::operator()(string& line, unsigned int precision)
         expression.pop();
 
         result = evaluate(x1, op, x2);
-        cout << "bwd quantity result: "
-             << x1 << op << x2 << "="
-             << result << endl;
 
         if (expression.empty()) {
-          cout << "stack is empty" << endl;
           break;
         }
 
@@ -167,26 +157,13 @@ string Calculator::operator()(string& line, unsigned int precision)
         }
 
         if (expression.top() == "^" || expression.top() == "*" || expression.top() == "/") {
-          cout << "pushed in " << result << endl;
           expression.push(result);
           continue;
         } else {
-          cout << "pushed in " << result << endl;
           expression.push(result);
           break;
         }
 
-
-
-
-        /*
-        // if case where there is ^, *, or /, then a ()
-        if (expression.top() == "^" || expression.top() == "*" ||
-            expression.top() == "/"){
-          expression.push(result);
-          continue;
-        }
-        */
       } while (expression.size() != 1);  // keep evaluating, until returns
     }
   } // close the iss while

@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
+// #include <map>
+// using std::map;
 using std::setprecision;
 using std::string;
 using std::stod;
@@ -21,11 +23,11 @@ int main(int argc, const char* argv[])
   Calculator myCalc;
   string input;
   string result;
+  // map<string, string> results;
 
-  cout << "program start" << endl;
 
   if (argc > 2) {
-    // too many arguments, terminate program
+    // too many arguments
     cout << "Usage: command [filename or expression]" << endl;
     return 1;
   }
@@ -41,14 +43,9 @@ int main(int argc, const char* argv[])
     string line;
     while (getline(infile, line)) {
       // give input lines to calculator class and output results
-      cout << "*********************************************************\n";
-      cout << line << endl;
       result = myCalc(line, 2);
       // cout << setprecision(2)
-      cout << "\t*************************************************\n"
-           << "\t*RESULT: " << result << " = " << line << endl
-           << "\t*************************************************\n"
-           << endl << endl;
+      cout << "RESULT: " << result << " = " << line << endl;
       myCalc.clear();
     }
   }

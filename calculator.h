@@ -10,9 +10,11 @@ using std::stack;
 class Calculator
 {
 public:
-  Calculator() {};
-  ~Calculator() { clear(); };
+  Calculator() { input = ""; };
+  ~Calculator();
 
+  // adds spaces between operands and operators to allow easier reading with
+  // string stream later
   void refineInput(string&);
 
   // takes a string of numbers and operators
